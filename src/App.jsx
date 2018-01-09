@@ -4,12 +4,14 @@ import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
 
+
 class App extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
+      socket: "ws://127.0.0.1:3001",
       currentUser: "Bob",
       messages: [
         {
@@ -26,25 +28,23 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-  console.log("componentDidMount <App />");
-  setTimeout(() => {
-    console.log("Simulating incoming message");
-    // Add a new message to the list of messages in the data store
-    const newMessage = {id: 3, username: "Michelle", content: "Hello there!"};
-    const messages = this.state.messages.concat(newMessage)
-    // Update the state of the app component.
-    // Calling setState will trigger a call to render() in App and all child components.
-    this.setState({messages: messages})
-    }, 3000);
+  componentDidMount = () => {
+    this.connection = new WebSocket(this.state.socket);
+    this.connection.onopen = () => {
+      console.log("Connected to server as:", this.state.currentUser);
+      this.connection.send('Connected ' + this.state.currentUser);
+    };
+
   }
 
   newMessage = (e) => {
     if (e.key === "Enter") {
-      const msg = e.target.value;
+      let msg = e.target.value;
       const newMessage = {username: this.state.currentUser, content: msg, id: (this.state.messages.length + 1)};
       const messages = this.state.messages.concat(newMessage);
       this.setState({messages : messages});
+      this.connection.send(this.state.currentUser + ' said ' + msg);
+      e.target.value = ""
     }
   }
 
