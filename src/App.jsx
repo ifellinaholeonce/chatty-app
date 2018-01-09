@@ -12,19 +12,8 @@ class App extends Component {
 
     this.state = {
       socket: "ws://127.0.0.1:3001",
-      currentUser: "Bob",
-      messages: [
-        {
-          username: "Bob",
-          content: "Has anyone seen my marbles?",
-          id: "1",
-        },
-        {
-          username: "Jane",
-          content: "How do you test in React?!",
-          id: "2",
-        },
-      ]
+      currentUser: {name: "Bob"},
+      messages: []
     };
   }
 
@@ -40,10 +29,10 @@ class App extends Component {
   newMessage = (e) => {
     if (e.key === "Enter") {
       let msg = e.target.value;
-      const newMessage = {username: this.state.currentUser, content: msg, id: (this.state.messages.length + 1)};
+      const newMessage = {username: this.state.currentUser.name, content: msg, id: (this.state.messages.length + 1)};
       const messages = this.state.messages.concat(newMessage);
       this.setState({messages : messages});
-      this.connection.send(this.state.currentUser + ' said ' + msg);
+      this.connection.send(this.state.currentUser.name + ' said ' + msg);
       e.target.value = ""
     }
   }
@@ -55,7 +44,7 @@ class App extends Component {
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
         <MessageList messages = {this.state.messages} />
-        <ChatBar currentUser = {this.state.currentUser} newMessage={this.newMessage} />
+        <ChatBar currentUser = {this.state.currentUser.name} newMessage={this.newMessage} />
     </div>
     );
   }
