@@ -11,7 +11,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      currentUser: {name: "Bob"},
+      currentUser: {name: "Anonymous"},
       messages: []
     };
   }
@@ -38,6 +38,12 @@ class App extends Component {
     }
   }
 
+  newUserName = (e) => {
+    const userName = e.target.value
+    console.log(e.target.value)
+    this.setState({currentUser: {name : userName}})
+  }
+
   render() {
     return (
     <div>
@@ -45,7 +51,7 @@ class App extends Component {
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
         <MessageList messages = {this.state.messages} />
-        <ChatBar currentUser = {this.state.currentUser.name} newMessage={this.newMessage} />
+        <ChatBar currentUser = {this.state.currentUser.name} newMessage={this.newMessage} newUserName={this.newUserName}/>
     </div>
     );
   }

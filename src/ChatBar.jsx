@@ -1,21 +1,21 @@
 import React, {Component} from 'react';
 
-let getCurrentUser = (currentUser) => {
-  if (currentUser === undefined) {
-    return 'Anonymous';
-  }
-  return currentUser;
-};
 
 
 class ChatBar extends Component {
 
 
+// getCurrentUser = (currentUser) => {
+//   if (currentUser === undefined || currentUser === "") {
+//     return 'Anonymous';
+//   }
+//   return currentUser;
+// };
 
   render() {
     return (
      <footer className="chatbar">
-        <input className="chatbar-username" placeholder={getCurrentUser(this.props.currentUser)} />
+        <input className="chatbar-username" value={this.props.currentUser} onChange= {this.props.newUserName} />
         <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress = {this.props.newMessage} />
       </footer>
     );
