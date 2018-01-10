@@ -26,7 +26,7 @@ class App extends Component {
       const messages = this.state.messages.concat(message);
       this.setState({messages});
     }
-
+    this.setState({tempName: this.state.currentUser.name})
   }
 
   newMessage = (e) => {
@@ -41,7 +41,19 @@ class App extends Component {
   newUserName = (e) => {
     const userName = e.target.value
     console.log(e.target.value)
-    this.setState({currentUser: {name : userName}})
+    this.setState({
+      currentUser: {name : userName},
+    })
+  }
+
+  notifyNameChange = (e) => {
+    const oldUserName = this.state.tempName
+    const currentUserName = this.state.currentUser.name
+    const notification = {content: oldUserName + " changed name to " + currentUserName}
+    this.connection.send(JSON.stringify(notification));
+    this.setState({
+      tempName: this.state.currentUser.name
+    })
   }
 
   render() {
@@ -51,7 +63,12 @@ class App extends Component {
         <a href="/" className="navbar-brand">Chatty</a>
       </nav>
         <MessageList messages = {this.state.messages} />
-        <ChatBar currentUser = {this.state.currentUser.name} newMessage={this.newMessage} newUserName={this.newUserName}/>
+        <ChatBar
+          currentUser = {this.state.currentUser.name}
+          newMessage={this.newMessage}
+          newUserName={this.newUserName}
+          notifyNameChange={this.notifyNameChange}
+        />
     </div>
     );
   }
