@@ -14,7 +14,9 @@ class App extends Component {
     this.state = {
       currentUser: {name: "Anonymous"},
       userCount: 0,
-      messages: []
+      messages: [],
+      messageHistory: [],
+      messageHistoryIndex: 0,
     };
   }
 
@@ -60,14 +62,30 @@ class App extends Component {
   newMessage = (e) => {
     if (e.key === "Enter") {
       let msg = e.target.value;
-      const newMessage = {
-        type: "postMessage",
-        username: this.state.currentUser.name,
-        colour: this.state.currentUser.colour,
-        content: msg
-      };
-      this.connection.send(JSON.stringify(newMessage));
-      e.target.value = ""
+      if (msg !== "") {
+        const newMessage = {
+          type: "postMessage",
+          username: this.state.currentUser.name,
+          colour: this.state.currentUser.colour,
+          content: msg
+        };
+        this.connection.send(JSON.stringify(newMessage));
+        this.state.messageHistory.unshift(newMessage);
+        let messageHistory = this.state.messageHistory;
+        this.setState({
+          messageHistory,
+          messageHistoryIndex: 0
+        })
+        e.target.value = ""
+      }
+    }
+    if (e.key === "ArrowUp") {
+      let index = this.state.messageHistoryIndex;
+      e.target.value = this.state.messageHistory[index].content;
+      if (index < this.state.messageHistory.length -1) {
+        index++;
+      }
+      this.setState({messageHistoryIndex: index})
     }
   }
 
