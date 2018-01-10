@@ -50,10 +50,12 @@ class App extends Component {
     const oldUserName = this.state.tempName
     const currentUserName = this.state.currentUser.name
     const notification = {content: oldUserName + " changed name to " + currentUserName}
-    this.connection.send(JSON.stringify(notification));
-    this.setState({
-      tempName: this.state.currentUser.name
-    })
+    if (oldUserName !== currentUserName) {
+      this.connection.send(JSON.stringify(notification));
+      this.setState({
+        tempName: this.state.currentUser.name
+      })
+    }
   }
 
   render() {
