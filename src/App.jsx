@@ -25,20 +25,47 @@ class App extends Component {
     };
     this.connection.onmessage = (event) => {
       let message = JSON.parse(event.data);
-      if (message.type === "incomingUserCount") {
-        this.setState({userCount: message.content})
-      } else {
-        const messages = this.state.messages.concat(message);
-        this.setState({messages});
+      let messages = []
+
+      switch(message.type){
+        case "incomingUserInit":
+          this.initUser(message);
+          break;
+        case "incomingUserCount":
+          this.setState({userCount: message.content})
+          break;
+        case "incomingMessage":
+          messages = this.state.messages.concat(message);
+          this.setState({messages});
+          break;
+        case "incomingNotification":
+          messages = this.state.messages.concat(message);
+          this.setState({messages});
+          break;
       }
-    }
-    this.setState({tempName: this.state.currentUser.name})
+
+      }
+  }
+
+  initUser = (message) => {
+    this.setState({
+      currentUser: {
+        name: message.name,
+        colour: message.colour
+      },
+      tempName: message.name
+    })
   }
 
   newMessage = (e) => {
     if (e.key === "Enter") {
       let msg = e.target.value;
-      const newMessage = {"type": "postMessage", username: this.state.currentUser.name, content: msg};
+      const newMessage = {
+        type: "postMessage",
+        username: this.state.currentUser.name,
+        colour: this.state.currentUser.colour,
+        content: msg
+      };
       this.connection.send(JSON.stringify(newMessage));
       e.target.value = ""
     }
@@ -69,7 +96,7 @@ class App extends Component {
         <NavBar userCount = {this.state.userCount}/>
         <MessageList messages = {this.state.messages} />
         <ChatBar
-          currentUser = {this.state.currentUser.name}
+          currentUser = {this.state.currentUser}
           newMessage={this.newMessage}
           newUserName={this.newUserName}
           notifyNameChange={this.notifyNameChange}
