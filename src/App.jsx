@@ -73,7 +73,7 @@ class App extends Component {
         this.state.messageHistory.unshift(newMessage);
         let messageHistory = this.state.messageHistory;
         this.setState({
-          messageHistory,
+          messageHistory: messageHistory,
           messageHistoryIndex: 0
         })
         e.target.value = ""
@@ -84,6 +84,17 @@ class App extends Component {
       e.target.value = this.state.messageHistory[index].content;
       if (index < this.state.messageHistory.length -1) {
         index++;
+      }
+      this.setState({messageHistoryIndex: index})
+    }
+    if (e.key === "ArrowDown") {
+      let index = this.state.messageHistoryIndex -1;
+      if (index > 0) {
+        e.target.value = this.state.messageHistory[index-1].content;
+      }
+      if (index <= 0) {
+        e.target.value = "";
+        index = 0;
       }
       this.setState({messageHistoryIndex: index})
     }
