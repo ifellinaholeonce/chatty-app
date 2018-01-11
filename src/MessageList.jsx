@@ -10,10 +10,10 @@ class MessageList extends Component {
       <main className="messages">
         { this.props.messages.map((msg) =>
           {
-            if (msg.type === "incomingMessage"){
+            if (msg.type === 'incomingMessage'){
               return <Message key={msg.id} message={msg} />
             }
-            if (msg.type === "incomingNotification"){
+            if (msg.type === 'incomingNotification'){
               return <MessageSystem key={msg.id} message={msg} />
             }
           })
@@ -23,5 +23,3 @@ class MessageList extends Component {
   }
 }
 export default MessageList;
-
-

@@ -3,15 +3,6 @@ import React, {Component} from 'react';
 
 
 class ChatBar extends Component {
-
-
-// getCurrentUser = (currentUser) => {
-//   if (currentUser === undefined || currentUser === "") {
-//     return 'Anonymous';
-//   }
-//   return currentUser;
-// };
-
   render() {
     return (
      <footer className="chatbar">
@@ -27,5 +18,3 @@ class ChatBar extends Component {
 
 }
 export default ChatBar;
-
-

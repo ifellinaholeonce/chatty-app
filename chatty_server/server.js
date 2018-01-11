@@ -14,18 +14,21 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer.Server({ server });
 
+//When the user connects assign them an Anonymous Animal ala google
 let randomName = () => {
   let choices = ["Cat", "Monkey", "Aardvark", "Bear"]
   let rnd = Math.floor(Math.random() * choices.length);
   return "Anonymous " + choices[rnd];
 }
 
+//When the user connects assign them a random colour
 let randomColour = () => {
   let choices = ["#4286f4", "#48a04f", "#a04948", "#6248a0"]
   let rnd = Math.floor(Math.random() * choices.length);
   return choices[rnd];
 }
 
+//When a user connects/disconnects update the count for everyone
 let updateUserCount = (count) => {
   let message = {
     type: "incomingUserCount",
@@ -34,6 +37,7 @@ let updateUserCount = (count) => {
   wss.broadcast(message)
 }
 
+//Send the init user to just the user that connected
 let initNewUser = (user) => {
   let message = {
     type: "incomingUserInit",
@@ -43,10 +47,11 @@ let initNewUser = (user) => {
   user.send(JSON.stringify(message))
 }
 
+//All other messages should be broadcast to everyone connected
 wss.broadcast = (message) => {
   wss.clients.forEach((client) => {
-    if (client.readyState === SocketServer.OPEN){
-      data = JSON.stringify(message);
+    if (client.readyState === SocketServer.OPEN){ //check that the websocket connection is open
+      data = JSON.stringify(message); //stringify the data
       client.send(data);
       console.log(data);
     }
@@ -60,8 +65,9 @@ wss.on('connection', (ws) => {
   updateUserCount(wss.clients.size)
   initNewUser(ws);
   ws.on('message', function incoming(message) {
-    message = JSON.parse(message);
+    message = JSON.parse(message); //immediately parse the data to json
     message.id = uuidv4();
+    //set the type for return the message
     if (message.type === "postMessage") {
       message.type = "incomingMessage"
     }
@@ -77,4 +83,3 @@ wss.on('connection', (ws) => {
     updateUserCount(wss.clients.size)
   });
 });
-
